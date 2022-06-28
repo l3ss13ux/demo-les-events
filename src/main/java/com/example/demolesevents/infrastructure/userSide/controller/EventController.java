@@ -1,6 +1,7 @@
 package com.example.demolesevents.infrastructure.userSide.controller;
 
 import com.example.demolesevents.hexagon.domain.Event;
+import com.example.demolesevents.hexagon.exception.BadEventException;
 import com.example.demolesevents.hexagon.userSidePort.ICreateEvent;
 import com.example.demolesevents.infrastructure.userSide.dto.CreateEventDto;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,10 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody  CreateEventDto createEventDto) {
-        return ResponseEntity.ok(iCreateEvent.create(createEventDto.toDomain()));
+        try {
+            return ResponseEntity.ok(iCreateEvent.create(createEventDto.toDomain()));
+        } catch (BadEventException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
