@@ -15,7 +15,6 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,17 +26,17 @@ public class EventServiceTest {
     ISaveEvent iSaveEvent;
 
     @Test
-    public void createEventWithBadMoment() throws BadEventException {
+    public void cannotCreateEventInThePast() throws BadEventException {
         LocalDate dateOfEvent = LocalDate.of(2022,06,10);
-        Event event = new Event("Devfest Lille 2022", "Kinépolis Lomme", 40.0f, dateOfEvent, Type.CULTUREL);
+        Event event = new Event("Devfest Lille 2022", "Kinépolis Lomme", 40.0f, dateOfEvent, Type.CULTURAL);
         assertThrows(BadEventException.class, () -> eventService.create(event));
         verifyNoInteractions(iSaveEvent);
     }
 
     @Test
-    public void createCharityAndPayingEvent() throws BadEventException {
+    public void charityEventMustNotBePaying() throws BadEventException {
         LocalDate dateOfEvent = LocalDate.of(2022,10,05);
-        Event event = new Event("Don du sang", "Saint-Quentin", 10.0f, dateOfEvent, Type.CARITATIF);
+        Event event = new Event("Don du sang", "Saint-Quentin", 10.0f, dateOfEvent, Type.CHARITY);
         assertThrows(BadEventException.class, () -> eventService.create(event));
         verifyNoInteractions(iSaveEvent);
     }
@@ -45,7 +44,7 @@ public class EventServiceTest {
     @Test
     public void createGoodEvent() throws BadEventException {
         LocalDate dateOfEvent = LocalDate.of(2023,06,18);
-        Event event = new Event("Devfest Lille 2023", "Kinépolis Lomme", 42.0f, dateOfEvent, Type.CULTUREL);
+        Event event = new Event("Devfest Lille 2023", "Kinépolis Lomme", 42.0f, dateOfEvent, Type.CULTURAL);
         doReturn(event).when(iSaveEvent).save(event);
 
         Event eventReturned = eventService.create(event);

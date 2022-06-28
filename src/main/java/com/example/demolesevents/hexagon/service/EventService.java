@@ -21,7 +21,7 @@ public class EventService implements ICreateEvent {
         }
 
         // 2ème règle métier : si le type est CARITATIF, le prix doit être à 0
-        if (event.getType() == Type.CARITATIF && event.getPrice() != 0) {
+        if (event.getType() == Type.CHARITY && event.getPrice() != 0) {
             throw  new BadEventException();
         }
 
